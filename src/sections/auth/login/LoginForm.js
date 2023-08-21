@@ -2,9 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchApi } from '../../../redux/slice/ApiCalls';
 import Iconify from '../../../components/iconify';
 
+
 export default function LoginForm() {
+  const dispatch =  useDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
@@ -21,31 +25,9 @@ export default function LoginForm() {
       rememberMe,
     };
 
-    setLoading(true);
-    console.log('email ai', email);
-    return;
-
-    try {
-      const response = await fetch('', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (response.ok) {
-        // Handle successful response (e.g., navigate to dashboard)
-        navigate('/dashboard', { replace: true });
-      } else {
-        // Handle error response (e.g., show error message)
-        console.error('Login failed');
-      }
-    } catch (error) {
-      console.error('An error occurred:', error);
-    }
-
-    setLoading(false);
+    dispatch(fetchApi(data))
+    
+  console.log("data to redux", data)
   };
 
 
@@ -55,7 +37,11 @@ export default function LoginForm() {
   return (
     <>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
+        <TextField name="email" label="Email address" 
+        onChange = {(e)=>{
+          setEmail(e.target.value)
+        }}
+        />
 
         <TextField
           name="password"
@@ -70,13 +56,22 @@ export default function LoginForm() {
               </InputAdornment>
             ),
           }}
-        />
+          onChange = {(e)=>{
+            setPassword(e.target.value)
+            // console.log("Data approaching", e.target.innerText)
+          }}
+       
+       />
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <Checkbox name="remember" label="Remember me" />
+        <Checkbox name="remember" label="Remember me"  
+        onChange = {(e)=>{
+          setRememberMe(e.target.checked)
+        }}
+        />
         <Link variant="subtitle2" to="/forgotpassword" underline="hover" style={{cursor:"pointer"}}>
-         <span onClick={handleForgotPasswordClick}>Forgot password?</span> 
+         {/* <div onClick={handleForgotPasswordClick}>Forgot password?</div>  */}
         </Link>
       </Stack>
 

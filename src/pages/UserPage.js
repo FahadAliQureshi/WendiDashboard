@@ -1,8 +1,11 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 
+import { useNavigate, useLocation } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // @mui
 import {
   Card,
@@ -31,6 +34,8 @@ import Scrollbar from '../components/scrollbar';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // mock
 import USERLIST from '../_mock/user';
+import { useSuccess } from '../SuccessContext';
+
 
 // ----------------------------------------------------------------------
 
@@ -75,6 +80,7 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function UserPage() {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(null);
   const [openEdit, setOpenEdit] = useState(null);
 
@@ -90,11 +96,18 @@ export default function UserPage() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const [isSuccessMessageShown, setSuccessMessageShown] = useState(false);
+
+ // tostify
+ const { showSuccess, setShowSuccess } = useSuccess();
+
+ 
   // Existing state variables
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null); // For previewing selected image
   const fileInputRef = useRef(null);
   const [uploadTrue, setUploadTrue] = useState(false);
+
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
   };
@@ -191,10 +204,18 @@ export default function UserPage() {
     }
   };
 
+  useEffect(() => {
+    if (showSuccess) {
+        toast.success('Form submitted successfully!', {
+            autoClose: 3000,
+        });
+    }
+}, [isSuccessMessageShown]);
   return (
     <>
       <Helmet>
         <title> User | Wendi UI </title>
+      
       </Helmet>
 
       <Container>
@@ -202,7 +223,14 @@ export default function UserPage() {
           <Typography variant="h4" gutterBottom>
             User
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} sx={{ background: '#4A276B' }}>
+          <div>
+            {showSuccess.toString()}
+          </div>
+          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} sx={{ background: '#4A276B' }}
+          onClick={()=>{
+            navigate('/newuser');
+          }}
+          >
             New User
           </Button>
         </Stack>
@@ -391,6 +419,7 @@ export default function UserPage() {
           Deleteddd
         </MenuItem>
       </Popover>
+      <ToastContainer />
     </>
   );
 }

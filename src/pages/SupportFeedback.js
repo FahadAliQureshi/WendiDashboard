@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Typography,
   Paper,
   Container,
   Button,
   TextField,
-  Grid,
+  FormControl,
+  MenuItem,
+  Select,
+  InputLabel,
 } from '@mui/material';
 import { styled } from '@mui/system';
 
@@ -18,10 +21,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
   display: 'flex',
   flexDirection: 'column',
-}));
-
-const StyledForm = styled('form')(({ theme }) => ({
-  marginTop: theme.spacing(2),
+  marginTop: '30px',
 }));
 
 const useStyles = {
@@ -31,64 +31,108 @@ const useStyles = {
 };
 
 function SupportAndFeedbackScreen() {
-  const [newTicket, setNewTicket] = useState('');
   const [tickets, setTickets] = useState([]);
+  const [newTicket, setNewTicket] = useState('');
 
-  const handleCreateTicket = () => {
-    // Simulating the creation of a new ticket
-    const newTicketData = {
+  const [supportAgent, setSupportagent] = useState([]);
+
+  const [ticketsBackend, setTicketsBackend] = useState([
+    {
       id: tickets.length + 1,
-      title: newTicket,
+      title: 'newTicket',
       status: 'Open',
-    };
+      user: 'John Doe',
+      description: 'Issue description',
+      priority: 'High',
+      supportAgent: '',
+    },
+    {
+      id: tickets.length + 2,
+      title: 'newTicket',
+      status: 'Pending',
+      user: 'Doe',
+      description: 'Issue description',
+      priority: 'High',
+      supportAgent: '',
+    },
+    {
+      id: tickets.length + 3,
+      title: 'newTicket',
+      status: 'Completed',
+      user: 'Khan Doe',
+      description: 'Issue description',
+      priority: 'High',
+      supportAgent: '',
+    },
+  ]);
 
-    setTickets([...tickets, newTicketData]);
-    setNewTicket('');
-  };
+  useEffect(() => {
+    // Fetch tickets from the backend here
+    // fetchTicketsFromBackend()
+    //   .then((fetchedTickets) => {
+    //     setTickets(fetchedTickets);
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error fetching tickets:', error);
+    //   });
+  }, []);
+
+  // const fetchTicketsFromBackend = async () => {
+  //   try {
+  //     // Perform a fetch request to your backend API
+  //     const response = await fetch('/api/tickets'); // Adjust the URL as needed
+  //     const data = await response.json();
+  //     return data;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // };
 
   return (
     <FormContainer maxWidth="md">
-      <StyledPaper elevation={3}>
-        <Typography variant="h5" gutterBottom>
-          Support and Feedback
-        </Typography>
+      <Typography variant="h5" gutterBottom>
+        Support and Feedback
+      </Typography>
 
-        {/* ... other content ... */}
-        
-        {/* 2.1 Ticket Management */}
-        <Typography variant="subtitle1" gutterBottom>
-          2.1 Ticket Management
-        </Typography>
-        <StyledForm>
-          <TextField
-            required
-            fullWidth
-            label="New Ticket"
-            variant="outlined"
-            value={newTicket}
-            onChange={(e) => setNewTicket(e.target.value)}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleCreateTicket}
-            sx={useStyles.submitButton}
-          >
-            Create Ticket
-          </Button>
-        </StyledForm>
-        <div>
-          {/* Display the list of tickets */}
-          {tickets.map((ticket) => (
-            <div key={ticket.id}>
-              Ticket #{ticket.id} - {ticket.title} - {ticket.status}
+      {/* Display the list of tickets */}
+      <div>
+        {ticketsBackend.map((ticket, index) => (
+          <StyledPaper elevation={3}>
+            <div key={ticket.id} style={{ marginTop: '20px' }}>
+              <strong>Ticket #{ticket.id}</strong> - {ticket.title}
+              <br />
+              User: {ticket.user}
+              <br />
+              Issue Description: {ticket.description}
+              <br />
+              Priority: {ticket.priority}
+              <br />
+              {/* Status: {ticket.status} */}
+              {/* Additional ticket details */}
+              <FormControl fullWidth required margin="normal">
+                <InputLabel>Agent</InputLabel>
+                <Select
+                  value={supportAgent[index]}
+                  onChange={(event) => {
+                    const newSupportAgents = [...supportAgent];
+                    newSupportAgents[index] = event.target.value;
+                    setSupportagent(newSupportAgents);
+                  }}
+                >
+                  <MenuItem value="agentOne">Agent 1</MenuItem>
+                  <MenuItem value="agentTwo">Agent 2</MenuItem>
+                  <MenuItem value="agentThree">Agent 3</MenuItem>
+                </Select>
+                <Typography variant="h6" gutterBottom style={{ marginTop: '10px' }}>
+                  Status: {ticket.status}
+                </Typography>
+              </FormControl>
             </div>
-          ))}
-        </div>
+          </StyledPaper>
+        ))}
+      </div>
 
-        {/* ... other functionalities ... */}
-        
-      </StyledPaper>
+      {/* ... other functionalities ... */}
     </FormContainer>
   );
 }

@@ -9,6 +9,8 @@ import {
 } from '@mui/material';
 
 function PaymentDetailsPage() {
+  const [name, setName] = useState ('');
+  const [lastName, setLastName] = useState ('');
   const [cardNumber, setCardNumber] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
@@ -51,6 +53,13 @@ function PaymentDetailsPage() {
     }
   };
 
+  // const handleNameChange = (e) => {
+  //   setName(e.target.input)
+  // }
+  // const handleLastNameChange = (e) => {
+  //   setLastName(e.target.input)
+  // }
+
   const handleExpiryDateChange = (e) => {
     const formattedInput = formatExpiryDate(e.target.value);
 
@@ -78,6 +87,33 @@ function PaymentDetailsPage() {
         </Typography>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
+          <Grid item xs={6}>
+              <TextField
+                label="First Name"
+                fullWidth
+                variant="outlined"
+                value={name}
+                // onChange={handleNameChange}
+                onChange={(e) => {
+                  const sanitizedValue = e.target.value.replace(/[^A-Za-z]/g, '');
+                  setName(sanitizedValue);
+                  // handleNameChange(e);
+                }}
+              />
+            </Grid>
+              <Grid item xs={6}>
+              <TextField
+                label="Last Name"
+                fullWidth
+                variant="outlined"
+                value={lastName}
+                onChange={(e) => {
+                  const sanitizedValue = e.target.value.replace(/[^A-Za-z]/g, '');
+                  setLastName(sanitizedValue);
+                  // handleLastNameChange(e);
+                }}
+              />
+            </Grid>
             <Grid item xs={12}>
               <TextField
                 label="Card Number"
@@ -91,6 +127,7 @@ function PaymentDetailsPage() {
                 }}
               />
             </Grid>
+            
             <Grid item xs={6}>
               <TextField
                 label="Expiry Date (mm/yy)"

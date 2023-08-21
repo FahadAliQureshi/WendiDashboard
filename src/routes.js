@@ -12,6 +12,8 @@ import DashboardAppPage from './pages/DashboardAppPage';
 import ForgotPassword from './pages/ForgotPassword';
 import PaymentDetailsPage from './pages/PaymentDetailsPage';
 import SupportFeedback from './pages/SupportFeedback';
+import ReportAnalytics from './pages/ReportAnalytics';
+import NewUser from './pages/NewUser';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -27,6 +29,7 @@ export default function Router() {
         { path: 'blog', element: <BlogPage /> },
         { path: 'paymentdetailspage', element: <PaymentDetailsPage /> },
         { path: 'supportfeedback', element: <SupportFeedback /> },
+        { path: 'reportandanalytics', element: <ReportAnalytics /> },
       ],
     },
     {
@@ -45,9 +48,14 @@ export default function Router() {
       path: '*',
       element: <Navigate to="/404" replace />,
     },
-    { path: '/forgotpassword', 
-    element: <ForgotPassword /> },
- 
+    {
+      path: '/forgotpassword',
+      element: <ForgotPassword />,
+    },
+    {
+      path: '/newuser',
+      element: <NewUser />,
+    },
   ]);
 
   return routes;
